@@ -1,0 +1,8 @@
+<div class="message-item-list" *ngIf="chat">
+  <div class="row">
+    <i class="fa-solid fa-user"></i>
+    <div>{{chat.contact.name}}</div>
+    <div *ngIf="chat.lastMessage">{{chat.lastMessage.text}}</div>
+    <span class="badge bg-primary rounded-pill">14</span>
+  </div>
+</div>
