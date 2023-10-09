@@ -10,11 +10,11 @@ export class ContactService {
 
   new():IContact
   {
-    return {name: ''};
+    return {id:'', name: ''};
   }
 
-  newName(_name:string):IContact
+  newName(_id:string, _name:string):IContact
   {
-    return {name: _name};
+    return {id:_id, name: _name};
   }
 }

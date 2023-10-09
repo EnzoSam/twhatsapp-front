@@ -1,8 +1,8 @@
-<div class="message-item-list" *ngIf="chat">
+<div class="message-item-list" *ngIf="chat"  [routerLink]="[routes.chat, chat.contact.id]">
   <div class="row">
-    <i class="fa-solid fa-user"></i>
-    <div>{{chat.contact.name}}</div>
+    <i class="col-auto fa-solid fa-user"></i>
+    <div class="col" [routerLink]="[routes.chat, chat.contact.id]">{{chat.contact.name}}</div>
     <div *ngIf="chat.lastMessage">{{chat.lastMessage.text}}</div>
-    <span class="badge bg-primary rounded-pill">14</span>
+    <span class="col badge bg-success rounded-pill">1</span>
   </div>
 </div>

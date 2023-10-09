@@ -1,3 +1,4 @@
-<div class="container" *ngIf="chat">
-    <p *ngFor="let m of chat.messages"></p>
+<div class="container pt-2" *ngIf="chat">
+    <app-message class="row" [message]="m" *ngFor="let m of chat.messages">        
+    </app-message>
 </div>

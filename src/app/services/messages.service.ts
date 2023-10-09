@@ -30,11 +30,11 @@ export class MessagesService extends BaseServiceService{
 
     new():IMessage
     {
-      return {contact: this._contactService.new(), text:''};
+      return {contact: this._contactService.new(), text:'', date:new Date()};
     }
 
-    newMessage(_contact:IContact, _text:string)
+    newMessage(_contact:IContact, _text:string, _date:any):IMessage
     {
-      return {contact: _contact, text:_text};
+      return {contact: _contact, text:_text, date:_date};
     }
 }

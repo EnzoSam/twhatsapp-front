@@ -1,4 +1,5 @@
 .message-item-list
 {
     min-height: 50px;
+    cursor: pointer;    
 }

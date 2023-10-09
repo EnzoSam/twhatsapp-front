@@ -13,6 +13,9 @@ import { ChatContainerComponent } from './components/whatsapp/chat-container/cha
 import { FirebaseService } from './services/firebase.service';
 import { MessagesService } from './services/messages.service';
 import {  HttpClientModule } from '@angular/common/http';
+import { ErrorDefaultComponent } from './components/whatsapp/error-default/error-default.component';
+import { MessageComponent } from './components/whatsapp/message/message.component';
+import { HomeComponent } from './components/whatsapp/home/home.component';
 
 
 @NgModule({
@@ -20,7 +23,10 @@ import {  HttpClientModule } from '@angular/common/http';
     AppComponent,
     MessageListLateralPanelComponent,
     MessageItemListComponent,
-    ChatContainerComponent
+    ChatContainerComponent,
+    ErrorDefaultComponent,
+    MessageComponent,
+    HomeComponent
   ],
   imports: [
     BrowserModule,

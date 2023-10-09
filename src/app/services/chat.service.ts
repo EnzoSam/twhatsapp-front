@@ -42,14 +42,13 @@ export class ChatService implements OnDestroy {
 
     for(let m of messagesRef)
     {
-      console.log(m);
-      
       let contact:IContact = this._contactService.new();
       if(m.entry[0].changes[0].value.contacts &&
         m.entry[0].changes[0].value.contacts.length > 0)
         {
           contact = this._contactService.newName
-          (m.entry[0].changes[0].value.contacts[0].profile.name);
+          (m.entry[0].changes[0].value.contacts[0].wa_id,
+            m.entry[0].changes[0].value.contacts[0].profile.name);
         }
 
 
@@ -60,20 +59,21 @@ export class ChatService implements OnDestroy {
         m.entry[0].changes[0].value.messages.length > 0)
         {
           message = this._messageService.newMessage
-          (contact, m.entry[0].changes[0].value.messages[0].text.body);
+          (contact, m.entry[0].changes[0].value.messages[0].text.body,
+            +m.entry[0].changes[0].value.messages[0].timestamp *1000);
         }
 
-      let existingChat = listChat.find(x=>x.contact.name === contact.name);
+      let existingChat = listChat.find(x=>x.contact.id === contact.id);
       if(!existingChat)
       {
         existingChat = this.newChat(contact);
         listChat.push(existingChat);
       }
 
+      console.log(m);
       existingChat.messages.push(message);
     }
 
-    console.log(listChat);
     this.chats.next(listChat);
 
     return listChat;
@@ -84,12 +84,13 @@ export class ChatService implements OnDestroy {
     return {contact:_contact, messages:[], lastMessage: undefined};
   }
 
-  getContactsChats(contact: IContact, chats:IChat[]):IChat|undefined
+  getContactsChats(contactId: any, chats:IChat[]):IChat|undefined
   {
-    let chat = undefined;
+    let contact = this._contactService.newName(contactId, '');
+    let chat = this.newChat(contact);
     for(let c of chats)
     {
-      if(c.contact.name === contact.name)
+      if(c.contact.id === contactId)
       {
         chat = c;
         break;
@@ -97,5 +98,10 @@ export class ChatService implements OnDestroy {
     }
 
     return chat;
+  }
+
+  getCurrentChatList():IChat[]
+  {
+    return this.chats.getValue();
   }
 }

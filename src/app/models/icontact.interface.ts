@@ -1,3 +1,4 @@
 export interface IContact {
-    name:string
+    name:string,
+    id:string
 }

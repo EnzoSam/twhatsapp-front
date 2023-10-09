@@ -1,6 +1,19 @@
-  <ul class="list-group col-md-2">
-    <li *ngFor="let c of chats"
-    class="border-0 list-group-item list-group-item-action d-flex justify-content-between align-items-center">      
-    <app-message-item-list [chat]="c"></app-message-item-list>
-    </li>  
+<div class="col vh-100">
+  <div class="row border rounded-0">
+    <h1>Enzo</h1> 
+  </div>
+  <div class="row border rounded-0">
+    <input class="form-control" list="datalistOptions" id="exampleDataList" placeholder="Buscar">
+    <datalist id="datalistOptions">
+      <option *ngFor="let contat of contacts" [value]="contat.name">
+    </datalist>
+  </div>  
+  <ul class="row list-group border rounded-0 vh-100">
+    <li
+      *ngFor="let c of chats"
+      class="border-0 list-group-item list-group-item-action d-flex justify-content-between align-items-center"
+    >
+      <app-message-item-list [chat]="c"></app-message-item-list>
+    </li>
   </ul>
+</div>

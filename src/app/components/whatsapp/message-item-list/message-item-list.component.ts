@@ -1,4 +1,5 @@
 import { Component, Input } from '@angular/core';
+import { routesPaths } from 'src/app/constants/routes.contants';
 import { IChat } from 'src/app/models/ichat.interface';
 
 @Component({
@@ -9,6 +10,10 @@ import { IChat } from 'src/app/models/ichat.interface';
 export class MessageItemListComponent {
 
   @Input() chat?:IChat;
-
+  routes:any;
   
+  constructor()
+  {
+    this.routes = routesPaths;
+  }
 }
