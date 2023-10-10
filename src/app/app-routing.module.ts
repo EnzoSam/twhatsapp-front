@@ -3,7 +3,7 @@ import { RouterModule, Routes } from '@angular/router';
 import { routesPaths, routesParams } from './constants/routes.contants';
 import { ChatContainerComponent } from './components/whatsapp/chat-container/chat-container.component';
 import { ErrorDefaultComponent } from './components/whatsapp/error-default/error-default.component';
-import { HomeComponent } from './components/whatsapp/home/home.component';
+import { HomeComponent } from './components/shares/home/home.component';
 
 const routes: Routes = [
   {
