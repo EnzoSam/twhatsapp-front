@@ -16,6 +16,9 @@ import {  HttpClientModule } from '@angular/common/http';
 import { ErrorDefaultComponent } from './components/whatsapp/error-default/error-default.component';
 import { MessageComponent } from './components/whatsapp/message/message.component';
 import { HomeComponent } from './components/whatsapp/home/home.component';
+import { ChatService } from './services/chat.service';
+import { ContactService } from './services/contact.service';
+import { ChangeService } from './services/change.service';
 
 
 @NgModule({
@@ -35,7 +38,11 @@ import { HomeComponent } from './components/whatsapp/home/home.component';
     AngularFireModule.initializeApp(environment.firebase),
     AngularFireDatabaseModule,
   ],
-  providers: [FirebaseService, MessagesService],
+  providers: [FirebaseService, 
+    MessagesService, 
+    ChatService, 
+    ContactService,
+    ChangeService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

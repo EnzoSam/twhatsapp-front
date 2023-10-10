@@ -1,7 +1,10 @@
+import { IChange } from "./ichange.interface";
 import { IContact } from "./icontact.interface";
 
 export interface IMessage {
-    contact:IContact,
+    id:any,
+    contact?:IContact,
     text:string,
-    date:any
+    date:any,
+    changes:IChange[]
 }

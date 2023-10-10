@@ -5,6 +5,8 @@ import { MessagesService } from './messages.service';
 import { ContactService } from './contact.service';
 import { IContact } from '../models/icontact.interface';
 import { IMessage } from '../models/imessage.interface';
+import { ChangeService } from './change.service';
+import { IChange } from '../models/ichange.interface';
 
 @Injectable({
   providedIn: 'root'
@@ -12,66 +14,69 @@ import { IMessage } from '../models/imessage.interface';
 export class ChatService implements OnDestroy {
 
   messagesSubscription?: Subscription;
-  private chats :any=new BehaviorSubject<IChat[]>([]);
-  
-  constructor(private _messagesService:MessagesService,
-    private _contactService:ContactService,
-    private _messageService:MessagesService) {
+  private chats: any = new BehaviorSubject<IChat[]>([]);
+
+  constructor(private _messagesService: MessagesService,
+    private _contactService: ContactService,
+    private _changeService: ChangeService) {
 
     this.messagesSubscription = this._messagesService.getMessagesRef
-    ().subscribe(values=>
-      {
-          this.processMessagesChanges(values);
+      ().subscribe(values => {
+        this.processMessagesChanges(values);
       });
 
-   }
+  }
 
-   onCahtsChange(): Observable<IChat[]>
-   {
-     return this.chats.asObservable()
-   }
+  onCahtsChange(): Observable<IChat[]> {
+    return this.chats.asObservable()
+  }
 
   ngOnDestroy(): void {
-    if(this.messagesSubscription)
+    if (this.messagesSubscription)
       this.messagesSubscription.unsubscribe();
   }
 
-  processMessagesChanges(messagesRef:any):IChat[]
-  {
+  processMessagesChanges(messagesRef: any): IChat[] {
     let listChat: IChat[] = [];
 
-    for(let m of messagesRef)
-    {
-      let contact:IContact = this._contactService.new();
-      if(m.entry[0].changes[0].value.contacts &&
-        m.entry[0].changes[0].value.contacts.length > 0)
-        {
-          contact = this._contactService.newName
-          (m.entry[0].changes[0].value.contacts[0].wa_id,
-            m.entry[0].changes[0].value.contacts[0].profile.name);
-        }
+    for (let m of messagesRef) {
+      let contact: IContact | undefined = this._contactService.newFromAPIObject(m);
+      let changeNoty: IChange | undefined = this._changeService.newFromAPIObject(m);
+      let message1: IMessage | undefined = this._messagesService.newFromAPIObject(m);
 
-
-      let message :IMessage = this._messageService.new();
-      if(m.entry.length > 0 && m.entry[0].changes.length > 0 &&
-        m.entry[0].changes[0].value &&
-        m.entry[0].changes[0].value.messages &&
-        m.entry[0].changes[0].value.messages.length > 0)
-        {
-          message = this._messageService.newMessage
-          (contact, m.entry[0].changes[0].value.messages[0].text.body,
-            +m.entry[0].changes[0].value.messages[0].timestamp *1000);
-        }
-
-      let existingChat = listChat.find(x=>x.contact.id === contact.id);
-      if(!existingChat)
-      {
-        existingChat = this.newChat(contact);
-        listChat.push(existingChat);
+      if (!contact) {
+        contact = this._contactService.new();
       }
 
-      console.log(m);
-      existingChat.messages.push(message);
+      let chat = listChat.find(c => c.contact.id === contact?.id);
+      if (!chat) {
+        chat = this.newChat(contact);
+        listChat.push(chat);
+      }
+
+      if (!message1 && changeNoty) {
+        let m = chat.messages.find(m => m.id == changeNoty?.id);
+        console.log(m);
+        if (!m) {
+          message1 = this._messagesService.newMessage
+            (changeNoty.id, contact, "Mensaje desde api", changeNoty.date.timestamp, []);
+        }
+        else
+        {
+          message1 = m;
+        }
+      }
+
+      if (message1) {
+        if (changeNoty) 
+          message1.changes.push(changeNoty);
+
+        let m = chat.messages.find(m => m.id == message1?.id);
+        if(!m)
+          chat.messages.push(message1);
+
+        chat.lastMessage = message1;
+      }
     }
 
     this.chats.next(listChat);
@@ -79,19 +84,15 @@ export class ChatService implements OnDestroy {
     return listChat;
   }
 
-  newChat(_contact:IContact):IChat
-  {
-    return {contact:_contact, messages:[], lastMessage: undefined};
+  newChat(_contact: IContact): IChat {
+    return { contact: _contact, messages: [], lastMessage: undefined };
   }
 
-  getContactsChats(contactId: any, chats:IChat[]):IChat|undefined
-  {
+  getContactsChats(contactId: any, chats: IChat[]): IChat | undefined {
     let contact = this._contactService.newName(contactId, '');
     let chat = this.newChat(contact);
-    for(let c of chats)
-    {
-      if(c.contact.id === contactId)
-      {
+    for (let c of chats) {
+      if (c.contact.id === contactId) {
         chat = c;
         break;
       }
@@ -100,8 +101,7 @@ export class ChatService implements OnDestroy {
     return chat;
   }
 
-  getCurrentChatList():IChat[]
-  {
+  getCurrentChatList(): IChat[] {
     return this.chats.getValue();
   }
 }

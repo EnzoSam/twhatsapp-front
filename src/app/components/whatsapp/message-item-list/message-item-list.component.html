@@ -2,7 +2,11 @@
   <div class="row">
     <i class="col-auto fa-solid fa-user"></i>
     <div class="col" [routerLink]="[routes.chat, chat.contact.id]">{{chat.contact.name}}</div>
-    <div *ngIf="chat.lastMessage">{{chat.lastMessage.text}}</div>
-    <span class="col badge bg-success rounded-pill">1</span>
+    <div *ngIf="chat.lastMessage">
+      <small>
+        {{chat.lastMessage.text}}
+      </small>
+      <span class="col badge bg-success rounded-pill col-auto">1</span>
+    </div>  
   </div>
 </div>
