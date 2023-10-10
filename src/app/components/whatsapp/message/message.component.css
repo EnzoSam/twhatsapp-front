@@ -2,3 +2,7 @@
 {
     min-width: 170px;
 }
+
+i{
+    cursor: pointer;    
+}

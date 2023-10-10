@@ -5,6 +5,6 @@ export interface IMessage {
     id:any,
     contact?:IContact,
     text:string,
-    date:any,
+    date:Date,
     changes:IChange[]
 }

@@ -6,11 +6,33 @@
         <div class="row text-end">
             <small class="text-body-secondary m-0">
                 {{message.date | date:'dd/MM/yyyy HH:mm:ss'}}
-                <i *ngIf="lastStatus() === 'delivered'" class="fa-solid fa-check-double"></i>
-                <i *ngIf="lastStatus() === 'read'" class="fa-solid fa-check-double" style="color: #0ff5f5;"></i>
-                <i *ngIf="lastStatus() === 'sent'" class="fa-solid fa-check"></i>
-                <i (click)="showStatus()" *ngIf="lastStatus() === 'failed'" class="fa-solid fa-triangle-exclamation" style="color: #dc3545;"></i>
+                <i data-bs-toggle="modal" [attr.data-bs-target]="'#logModal' + getIdentifier()" *ngIf="lastStatus() === 'delivered'" class="fa-solid fa-check-double"></i>
+                <i data-bs-toggle="modal" [attr.data-bs-target]="'#logModal' + getIdentifier()" *ngIf="lastStatus() === 'read'" class="fa-solid fa-check-double" style="color: #0ff5f5;"></i>
+                <i data-bs-toggle="modal" [attr.data-bs-target]="'#logModal' + getIdentifier()" *ngIf="lastStatus() === 'sent'" class="fa-solid fa-check"></i>
+                <i data-bs-toggle="modal" [attr.data-bs-target]="'#logModal' + getIdentifier()" *ngIf="lastStatus() === 'failed'" class="fa-solid fa-triangle-exclamation" style="color: #dc3545;"></i>
             </small>  
         </div>  
     </div>
 </div>
+
+
+<div class="modal fade" [id]="'logModal'+getIdentifier()"  tabindex="-1">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h1 class="modal-title fs-5">
+            {{message.contact.name}}
+          </h1>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+            <p *ngFor="let c of message.changes">
+                {{getStatusView(c.status) + ' ' + (c.date | date:'dd/MM/yyyy HH:mm:ss') + '. ' + c.text }}
+            </p>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+        </div>
+      </div>
+    </div>
+  </div>

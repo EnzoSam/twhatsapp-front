@@ -1,5 +1,6 @@
 import { Component, Input } from '@angular/core';
 import { IChange } from 'src/app/models/ichange.interface';
+import { MessagesService } from 'src/app/services/messages.service';
 
 @Component({
   selector: 'app-message',
@@ -8,44 +9,48 @@ import { IChange } from 'src/app/models/ichange.interface';
 })
 export class MessageComponent {
 
-  @Input() message:any;
+  @Input() message: any;
 
-  sended():boolean
-  {
-    return this.message.changes.find((c: IChange)=>c.status === 'sent') != null;
+  constructor(private _messageService: MessagesService) {
+
   }
 
-  delivered():boolean
-  {
-    return this.message.changes.find((c: IChange)=>c.status === 'delivered') != null;
-  }  
-
-  readed():boolean
-  {
-    return this.message.changes.find((c: IChange)=>c.status === 'read') != null;
-  }   
-
-  error():boolean
-  {
-    return this.message.changes.find((c: IChange)=>c.status === 'failed') != null;
-  }   
-
-  lastStatus():string
-  {
-    let lastChange = this.message.changes[this.message.changes.length - 1];
-    return lastChange? lastChange.status : 'delivered';
+  sended(): boolean {
+    return this.message.changes.find((c: IChange) => c.status === 'sent') != null;
   }
 
-  showStatus():void
-  {
-    let m = '';
-      for(let c of this.message.changes)
-      {
-        if(c.text)
-            m+=c.text + '\n';
-      }
+  delivered(): boolean {
+    return this.message.changes.find((c: IChange) => c.status === 'delivered') != null;
+  }
 
-      if(m !== '')
-        alert(m);
+  readed(): boolean {
+    return this.message.changes.find((c: IChange) => c.status === 'read') != null;
+  }
+
+  error(): boolean {
+    return this.message.changes.find((c: IChange) => c.status === 'failed') != null;
+  }
+
+  lastStatus(): string {
+
+    if(this.message.changes.find((c: IChange)=>c.status === 'read'))
+      return 'read';
+    else if(this.message.changes.find((c: IChange)=>c.status === 'delivered'))
+      return 'delivered';
+    else if(this.message.changes.find((c: IChange)=>c.status === 'sent'))
+      return 'sent';    
+    else if(this.message.changes.find((c: IChange)=>c.status === 'failed'))
+      return 'failed';    
+    else
+         return this.message.changes[this.message.changes.length - 1];
+  }
+
+  getIdentifier(): string {
+    return this.message.id.replace(/[^a-z0-9]/gi, '');
+  }
+
+  getStatusView(_satutus:string):string
+  {
+    return this._messageService.getStatusView(_satutus);
   }
 }

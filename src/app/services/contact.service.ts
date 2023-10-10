@@ -48,4 +48,32 @@ export class ContactService {
 
     return contact;
   }
+
+  getListContactFormAPIObject(apiObject:any):IContact[]
+  {
+    let contacts:IContact[] = [];
+
+    for(let o of apiObject)
+    {
+      let contact = this.newFromAPIObject(o);
+      if(contact)
+      {
+        let existing = contacts.find(c=>c.id === contact?.id);
+        if(!existing)
+        {
+          contacts.push(contact);
+        }          
+        else
+        {
+            if(contact.id !== contact.name)
+            {
+              existing.name = contact.name;
+            }
+        }
+      }
+    }
+
+    console.log(contacts);
+    return contacts;
+  }
 }

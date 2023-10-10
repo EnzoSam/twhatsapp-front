@@ -36,7 +36,7 @@ export class ChangeService {
 
         change = this.newChange(apiObject.entry[0].changes[0].value.statuses[0].id,
           apiObject.entry[0].changes[0].value.statuses[0].status,
-          new Date((+apiObject.entry[0].changes[0].value.statuses[0].timestamp) * 100),
+          new Date((+apiObject.entry[0].changes[0].value.statuses[0].timestamp) * 1000),
           apiObject.entry[0].changes[0].value.statuses[0].recipient_id, text);
     }
 

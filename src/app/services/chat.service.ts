@@ -39,6 +39,8 @@ export class ChatService implements OnDestroy {
   processMessagesChanges(messagesRef: any): IChat[] {
     let listChat: IChat[] = [];
 
+    let contacts = this._contactService.getListContactFormAPIObject(messagesRef);
+
     for (let m of messagesRef) {
       let contact: IContact | undefined = this._contactService.newFromAPIObject(m);
       let changeNoty: IChange | undefined = this._changeService.newFromAPIObject(m);
@@ -50,16 +52,20 @@ export class ChatService implements OnDestroy {
 
       let chat = listChat.find(c => c.contact.id === contact?.id);
       if (!chat) {
-        chat = this.newChat(contact);
-        listChat.push(chat);
+
+        let contactUnif = contacts.find(c=>c.id === contact?.id);
+        if(contactUnif)
+        {
+          chat = this.newChat(contactUnif);
+          listChat.push(chat);
+        }
       }
 
-      if (!message1 && changeNoty) {
+      if (!message1 && changeNoty && chat) {
         let m = chat.messages.find(m => m.id == changeNoty?.id);
-        console.log(m);
         if (!m) {
           message1 = this._messagesService.newMessage
-            (changeNoty.id, contact, "Mensaje desde api", changeNoty.date.timestamp, []);
+            (changeNoty.id, contact, "Mensaje desde api", changeNoty.date, []);
         }
         else
         {
@@ -67,7 +73,7 @@ export class ChatService implements OnDestroy {
         }
       }
 
-      if (message1) {
+      if (message1 && chat) {
         if (changeNoty) 
           message1.changes.push(changeNoty);
 

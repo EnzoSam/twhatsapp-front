@@ -36,7 +36,7 @@ export class MessagesService extends BaseServiceService {
       changes:[] };
   }
 
-  newMessage(_id:any, _contact: IContact | undefined, _text: string, _date: any, _changes:IChange[]): IMessage {
+  newMessage(_id:any, _contact: IContact | undefined, _text: string, _date: Date, _changes:IChange[]): IMessage {
     return { 
       id:_id,
       contact: _contact, 
@@ -58,7 +58,7 @@ export class MessagesService extends BaseServiceService {
       message = this.newMessage
         (apiObject.entry[0].changes[0].value.messages[0].id,
           undefined, apiObject.entry[0].changes[0].value.messages[0].text.body,
-          +apiObject.entry[0].changes[0].value.messages[0].timestamp * 1000,[]);
+          new Date(+apiObject.entry[0].changes[0].value.messages[0].timestamp * 1000),[]);
 
       let contact = this._contactService.newFromAPIObject(apiObject);
       message.contact = contact;
@@ -70,5 +70,17 @@ export class MessagesService extends BaseServiceService {
   }
 
     return message;
+  }
+
+  getStatusView(_status:string):string
+  {
+    if(_status === 'sent')
+      return 'Enviado';
+    else if(_status === 'delivered')
+      return 'Entregado';
+    else if(_status === 'read')
+      return 'Leido';    
+    else
+      return _status;
   }
 }
