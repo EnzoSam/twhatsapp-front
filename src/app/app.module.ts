@@ -20,6 +20,9 @@ import { ChatService } from './services/chat.service';
 import { ContactService } from './services/contact.service';
 import { ChangeService } from './services/change.service';
 
+import { initializeApp } from "firebase/app";
+
+initializeApp(environment.firebaseConfigHosting);
 
 @NgModule({
   declarations: [
