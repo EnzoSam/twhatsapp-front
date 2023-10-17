@@ -7,24 +7,42 @@ import { IContact } from '../models/icontact.interface';
 import { IMessage } from '../models/imessage.interface';
 import { ChangeService } from './change.service';
 import { IChange } from '../models/ichange.interface';
+import { FirebaseService } from './firebase.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class ChatService implements OnDestroy {
+  chatSubscription?: Subscription;
 
   messagesSubscription?: Subscription;
+  changesChanges?: Subscription;
+  messagesChanges?: Subscription;
   private chats: any = new BehaviorSubject<IChat[]>([]);
 
-  constructor(private _messagesService: MessagesService,
+  constructor(private _firebaseService: FirebaseService,
     private _contactService: ContactService,
-    private _changeService: ChangeService) {
+    private _changeService: ChangeService,
+    private _messagesService: MessagesService) {
 
-    this.messagesSubscription = this._messagesService.getMessagesRef
-      ().subscribe(values => {
-        this.processMessagesChanges(values);
+    this.chats.next([]);
+
+    this.chatSubscription = this._firebaseService.getCollectionRef('chat')
+      .subscribe(values => {
+        this.procesChatChanges(values);
       });
+  }
 
+  initChangesSubscription() {
+    if (!this.changesChanges) {
+      //this._changeService.initChangesSubscription();
+
+      /*
+      this.changesChanges = this._changeService.getChangesObservable()
+        .subscribe(changes => {          
+          this.setChanges(this.getCurrentChatList(), changes);
+        });*/
+    }
   }
 
   onCahtsChange(): Observable<IChat[]> {
@@ -34,80 +52,166 @@ export class ChatService implements OnDestroy {
   ngOnDestroy(): void {
     if (this.messagesSubscription)
       this.messagesSubscription.unsubscribe();
+    if (this.chatSubscription)
+      this.chatSubscription.unsubscribe();
+    if (this.changesChanges)
+      this.changesChanges.unsubscribe();
   }
 
-  processMessagesChanges(messagesRef: any): IChat[] {
-    let listChat: IChat[] = [];
-
-    let contacts = this._contactService.getListContactFormAPIObject(messagesRef);
-
-    for (let m of messagesRef) {
-      let contact: IContact | undefined = this._contactService.newFromAPIObject(m);
-      let changeNoty: IChange | undefined = this._changeService.newFromAPIObject(m);
-      let message1: IMessage | undefined = this._messagesService.newFromAPIObject(m);
-
-      if (!contact) {
-        contact = this._contactService.new();
+  loadChats(chats: IChat[]):Promise<IChat[]> {
+    return new Promise((resolve, reject) => {
+      let chatsReturn: IChat[] = [];
+      for (let c of chats) {
+        let contact = this._contactService.getContactById(c.contactId);
+        let chat = this.newChat(contact);
+        chat.id = c.id;
+        chat.lastChangeId = c.lastChangeId;
+        chatsReturn.push(chat);
       }
 
-      let chat = listChat.find(c => c.contact.id === contact?.id);
-      if (!chat) {
+      this.loadMessages(chatsReturn)
+        .then(chatsLoads => {
+          this.loadChanges(chatsLoads)
+            .then(_chatsWithChanges => {
+              resolve(_chatsWithChanges);
+            });
 
-        let contactUnif = contacts.find(c=>c.id === contact?.id);
-        if(contactUnif)
+        })
+    });
+  }
+
+  procesChatChanges(chats: any) {
+
+    this.loadChats(chats).then(chatsLoads => {
+
+      for(let c of chatsLoads)
+      {
+        c.messages = c.messages.sort((a:IMessage,b:IMessage) =>
         {
-          chat = this.newChat(contactUnif);
-          listChat.push(chat);
+          {return a.timestamp < b.timestamp ? 1 : -1;}
+        });
+      }
+
+      this.chats.next(chatsLoads);
+      this.initChangesSubscription();
+    })
+  }
+
+  loadChanges(_chats: IChat[]): Promise<IChat[]> {
+    return new Promise((resolve, reject) => {
+      try {
+        for (let c of _chats) {
+
+          if(!c.id)        
+            continue;
+          
+          this._changeService.getChatChanges(c.id, c.lastChangeTimestamp)
+            .then((changes: IChange[]) => {
+
+              for(let change of changes)
+              {
+                 let messageFinded = c.messages.find(m=>m.id === change.messageId);
+                if(!messageFinded)
+                {
+                  c.messages.push(this._messagesService.newMessage(change.messageId,c.id,
+                    'Mensaje desde API', [], change.timestamp,'text'));
+                }
+              }
+
+              for (let message of c.messages) {
+                let messageChanges = changes.filter
+                  (c => c.messageId === message.id);
+                messageChanges.forEach(mc =>
+                  this._messagesService.addChange(message, mc));
+              }
+            });
+
+            resolve(_chats);
+        }
+      }
+      catch (ex) {
+        reject(ex);
+      }
+    });
+  }
+
+  loadMessages(chat: IChat[]): Promise<IChat[]> {
+    return new Promise((resolve, reject) => {
+      try {
+        for (let c of chat) {
+          this._messagesService.getMessagesByChat(c.id)
+            .then((m: IMessage[]) => {
+              if (m)
+              {
+                c.messages = m;
+              }
+              else
+                c.messages = [];
+            });
+        }
+        resolve(chat);
+      }
+      catch (ex) {
+        reject(ex);
+      }
+    });
+  }
+
+  extratMessagesIds(_chages: IChange[]): any[] {
+    let messagesIds: any[] =
+      [...new Set(_chages.map(c => c.messageId))];
+    return messagesIds;
+  }
+
+  extratChatssIds(_chages: IMessage[]): any[] {
+    let messagesIds: any[] =
+      [...new Set(_chages.map(c => c.chatId))];
+    return messagesIds;
+  }
+
+  setChanges(_chats: IChat[], _chages: IChange[]) {
+
+    let messages = this.extratMessagesIds(_chages);
+
+
+    for (let chat of _chats) {
+
+      if (chat.lastChangeId) {
+        let last = _chages.find(c => c.id === chat.lastChangeId);
+        if (last) {
+          chat.lastMessage = chat.messages.find(m => m.id === last?.messageId);
+          if (!chat.lastMessage)
+            this.loadMessages([chat]).then(chatLoaded => {
+              chat.lastMessage = chat.messages.find(m => m.id === last?.messageId);
+            })
         }
       }
 
-      if (!message1 && changeNoty && chat) {
-        let m = chat.messages.find(m => m.id == changeNoty?.id);
-        if (!m) {
-          message1 = this._messagesService.newMessage
-            (changeNoty.id, contact, "Mensaje desde api", changeNoty.date, []);
-        }
-        else
-        {
-          message1 = m;
-        }
-      }
-
-      if (message1 && chat) {
-        if (changeNoty) 
-          message1.changes.push(changeNoty);
-
-        let m = chat.messages.find(m => m.id == message1?.id);
-        if(!m)
-          chat.messages.push(message1);
-
-        chat.lastMessage = message1;
+      for (let message of chat.messages) {
+        message.changes = _chages.filter(c => c.messageId == message.id);
       }
     }
-
-    this.chats.next(listChat);
-
-    return listChat;
   }
 
   newChat(_contact: IContact): IChat {
-    return { contact: _contact, messages: [], lastMessage: undefined };
-  }
 
-  getContactsChats(contactId: any, chats: IChat[]): IChat | undefined {
-    let contact = this._contactService.newName(contactId, '');
-    let chat = this.newChat(contact);
-    for (let c of chats) {
-      if (c.contact.id === contactId) {
-        chat = c;
-        break;
-      }
+    return {
+      id: '',
+      contactId: _contact.id,
+      contact: _contact,
+      messages: [],
+      lastChangeId: undefined,
+      lastMessage: undefined
     }
-
-    return chat;
   }
 
   getCurrentChatList(): IChat[] {
-    return this.chats.getValue();
+    let l = this.chats.getValue();
+    return l;
+  }
+
+  getChat(contactId: any): IChat | undefined {
+    let chat = this.getCurrentChatList().find(c => c.contactId === contactId);
+    return chat;
   }
 }

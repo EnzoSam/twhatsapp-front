@@ -15,4 +15,5 @@ export class BaseServiceService {
     this.apiUrl = environment.baseApiUrl;
     this.headers = new HttpHeaders().set('Content-Type','application/json');    
   }
+
 }

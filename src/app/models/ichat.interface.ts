@@ -1,8 +1,14 @@
+import { IChange } from "./ichange.interface";
 import { IContact } from "./icontact.interface";
 import { IMessage } from "./imessage.interface";
 
 export interface IChat {
-    contact:IContact
+    
+    id:any;
+    contactId :any;
+    contact:IContact;
     messages:IMessage[]
-    lastMessage?:IMessage
+    lastChangeId: any;
+    lastChangeTimestamp?:any,
+    lastMessage?:IMessage;
 }

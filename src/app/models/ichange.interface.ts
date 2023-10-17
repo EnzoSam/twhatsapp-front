@@ -1,7 +1,9 @@
 export interface IChange {
-    id:any,
+    id:any;
+    messageId:any,
     status:any,
-    date:any,
+    timestamp:any,
     recipientId:any,
-    text:string
+    text:string,
+    chatId:any
 }

@@ -1,12 +1,17 @@
-<div class="message-item-list" *ngIf="chat"  [routerLink]="[routes.chat, chat.contact.id]">
+<div *ngIf="chat" (click)="scrollToBottom()">
+<div class="message-item-list" *ngIf="chat"  [routerLink]="[routes.chat, chat.contactId]">
   <div class="row">
     <i class="col-auto fa-solid fa-user"></i>
-    <div class="col" [routerLink]="[routes.chat, chat.contact.id]">{{chat.contact.name}}</div>
-    <div *ngIf="chat.lastMessage">
-      <small>
-        {{chat.lastMessage.text}}
+    <div class="col" [routerLink]="[routes.chat, chat.contactId]">{{chat.contact.name}}</div>
+    <div *ngIf="chat">
+      <small *ngIf="chat.lastMessage && chat.lastMessage.type === 'text'">
+        {{chat.lastMessage.content}}
       </small>
+      <small *ngIf="chat.lastMessage && chat.lastMessage.type === 'template'">
+        {{chat.lastMessage.content.fileName}}
+      </small>      
       <span class="col badge bg-success rounded-pill col-auto">1</span>
     </div>  
   </div>
+</div>
 </div>

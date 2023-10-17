@@ -21,6 +21,8 @@ import { ContactService } from './services/contact.service';
 import { ChangeService } from './services/change.service';
 
 import { initializeApp } from "firebase/app";
+import { MessageContentTextComponent } from './components/whatsapp/message-content-text/message-content-text.component';
+import { MessageContentTemplateComponent } from './components/whatsapp/message-content-template/message-content-template.component';
 
 initializeApp(environment.firebaseConfigHosting);
 
@@ -32,7 +34,9 @@ initializeApp(environment.firebaseConfigHosting);
     ChatContainerComponent,
     ErrorDefaultComponent,
     MessageComponent,
-    HomeComponent
+    HomeComponent,
+    MessageContentTextComponent,
+    MessageContentTemplateComponent
   ],
   imports: [
     BrowserModule,
@@ -41,10 +45,10 @@ initializeApp(environment.firebaseConfigHosting);
     AngularFireModule.initializeApp(environment.firebase),
     AngularFireDatabaseModule,
   ],
-  providers: [FirebaseService, 
-    MessagesService, 
-    ChatService, 
+  providers: [FirebaseService,     
     ContactService,
+    ChatService,  
+    MessagesService,
     ChangeService],
   bootstrap: [AppComponent]
 })

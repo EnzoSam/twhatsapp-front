@@ -7,15 +7,16 @@ import { Observable } from 'rxjs';
 })
 export class FirebaseService {
   
-  db: AngularFireDatabase;
-
   constructor(private _db: AngularFireDatabase) {
-
-    this.db = _db;
   }
 
    getCollectionRef(collectionName:string):Observable<any>
+   {      
+      return this._db.list(collectionName).valueChanges();
+   }
+
+   getOnceCollectionRef(collectionName:string)
    {
-      return this.db.list(collectionName).valueChanges();
+      return this._db.database.ref(collectionName);
    }
 }

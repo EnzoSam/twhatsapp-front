@@ -1,9 +1,12 @@
-<div class="container-fluid">
-  <div class="row vh-100">
-    <app-message-list-lateral-panel class="col-md-3 col-sm-12">        
-    </app-message-list-lateral-panel>
-    <div class="col-md">
-      <router-outlet ></router-outlet>
+<div id="aaa1" class="d-flex m-0 p-0">
+  <div class="row m-0 vh-100 d-flex m-0 p-0">
+    <div id = "pc" class="d-flex flex-nowrap m-0 p-0">
+      <app-message-list-lateral-panel class="col-md-3 col-sm-12 col-xs-12 col-12">        
+      </app-message-list-lateral-panel>
+      <div class="col-12 col-xs-12 col-md-7">
+        <router-outlet></router-outlet>
+      </div>
     </div>
+  
   </div>
 </div>

@@ -1,13 +1,34 @@
-import { Injectable } from '@angular/core';
+import { Injectable, OnDestroy } from '@angular/core';
 import { IContact } from '../models/icontact.interface';
 import { ChangeService } from './change.service';
+import { FirebaseService } from './firebase.service';
+import { BehaviorSubject, Subscription } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
 })
-export class ContactService {
+export class ContactService implements OnDestroy{
+  
+  contactSubscription?: Subscription;
+  private contacts: any = new BehaviorSubject<IContact[]>([]);
+  
+  constructor(private _changeService:ChangeService,
+    private _firebaseService:FirebaseService) {
 
-  constructor(private _changeService:ChangeService) { }
+        _firebaseService.getCollectionRef('contact')
+        .subscribe(contacts=>
+          {
+            this.processContactChanges(contacts);
+          })
+
+     }
+
+  ngOnDestroy(): void {
+    if(this.contactSubscription)
+      this.contactSubscription.unsubscribe();
+  }
+
+
 
   new():IContact
   {
@@ -19,61 +40,13 @@ export class ContactService {
     return {id:_id, name: _name};
   }
 
-  newFromAPIObject(apiObject:any):IContact | undefined
+  processContactChanges(contacts:IContact[])
   {
-    let contact:IContact | undefined = undefined;
-    if (apiObject.entry[0].changes[0].value.contacts &&
-      apiObject.entry[0].changes[0].value.contacts.length > 0) {
-      contact = this.newName
-        (apiObject.entry[0].changes[0].value.contacts[0].wa_id,
-          apiObject.entry[0].changes[0].value.contacts[0].profile.name);
-    }
-
-    if(!contact)
-    {
-      let change = this._changeService.newFromAPIObject(apiObject);
-      if(change)
-      {
-        contact = this.newName(change.recipientId, change.recipientId);
-      }
-    }
-
-    if (!contact && apiObject.entry[0].changes[0].value.metadata) {
-      console.log('No se encontro destinatario.');
-      /*
-      contact = this.newName
-        (apiObject.entry[0].changes[0].value.metadata.display_phone_number,
-          apiObject.entry[0].changes[0].value.metadata.display_phone_number);*/
-    }
-
-    return contact;
+    this.contacts.next(contacts);
   }
 
-  getListContactFormAPIObject(apiObject:any):IContact[]
+  getContactById(_contactId:any):IContact
   {
-    let contacts:IContact[] = [];
-
-    for(let o of apiObject)
-    {
-      let contact = this.newFromAPIObject(o);
-      if(contact)
-      {
-        let existing = contacts.find(c=>c.id === contact?.id);
-        if(!existing)
-        {
-          contacts.push(contact);
-        }          
-        else
-        {
-            if(contact.id !== contact.name)
-            {
-              existing.name = contact.name;
-            }
-        }
-      }
-    }
-
-    console.log(contacts);
-    return contacts;
+    return this.contacts.getValue().find((c: IContact)=>c.id == _contactId);
   }
 }

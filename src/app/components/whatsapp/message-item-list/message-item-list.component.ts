@@ -1,4 +1,5 @@
-import { Component, Input } from '@angular/core';
+import { Component, ElementRef, Input } from '@angular/core';
+import { AppComponent } from 'src/app/app.component';
 import { routesPaths } from 'src/app/constants/routes.contants';
 import { IChat } from 'src/app/models/ichat.interface';
 
@@ -12,8 +13,16 @@ export class MessageItemListComponent {
   @Input() chat?:IChat;
   routes:any;
   
-  constructor()
+  constructor(private el: ElementRef,private app: AppComponent)
   {
     this.routes = routesPaths;
+  }
+
+  scrollToBottom() {
+    const scrollableDiv = document.getElementById('aaa1');
+    console.log(scrollableDiv);
+    if (scrollableDiv) {
+      scrollableDiv.scrollLeft = scrollableDiv.scrollWidth;
+    }
   }
 }

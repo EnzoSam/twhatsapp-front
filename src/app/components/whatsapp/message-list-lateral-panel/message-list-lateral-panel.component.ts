@@ -35,7 +35,7 @@ export class MessageListLateralPanelComponent implements OnInit, OnDestroy{
     ().subscribe(_chats=>
       {
         this.chats = _chats;
-        this.contacts = this.chats.map(c=>c.contact);
+
       });
   }
 

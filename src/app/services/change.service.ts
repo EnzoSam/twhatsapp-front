@@ -1,45 +1,102 @@
-import { Injectable } from '@angular/core';
+import { Injectable, OnDestroy } from '@angular/core';
 import { IChange } from '../models/ichange.interface';
+import { FirebaseService } from './firebase.service';
+import { BehaviorSubject, Observable, Subscription } from 'rxjs';
+import { IMessage } from '../models/imessage.interface';
 
 @Injectable({
   providedIn: 'root'
 })
-export class ChangeService {
+export class ChangeService implements OnDestroy {
 
-  constructor() { }
+  changeSubscription?: Subscription;
+  private changes: any = new BehaviorSubject<IChange[]>([]);
 
-  newChange(_id:any, _status:any, _date:Date,_recipientiId:any,_text:string):IChange
-  {
+  constructor(private _firebaseService: FirebaseService) {
+
+    this.changes.next([]);
+  }
+
+  initChangesSubscription() {
+    if (!this.changeSubscription) {
+      this.changeSubscription = this._firebaseService.getCollectionRef("change")
+        .subscribe(changes => {
+          this.processChanges(changes);
+        });
+    }
+  }
+
+  ngOnDestroy(): void {
+    if (this.changeSubscription)
+      this.changeSubscription.unsubscribe();
+  }
+
+  getChangesObservable(): Observable<IChange[]> {
+    return this.changes.asObservable()
+  }
+
+  getCurrentChanges(): IChange[] {
+    return this.changes.getValue();
+  }
+
+  newChange(_id:any,_messageId: any, _status: any, _timestamp: any, 
+    _recipientiId: any, _text: string, _chatId:any): IChange {
     return {
       id:_id,
-      status:_status,
-      date:_date,
-      recipientId:_recipientiId,
-      text:_text
+      messageId: _messageId,
+      status: _status,
+      timestamp: _timestamp,
+      recipientId: _recipientiId,
+      text: _text,
+      chatId:_chatId
     }
   }
 
-  newFromAPIObject(apiObject:any):IChange|undefined
-  {
-    let change :IChange | undefined = undefined;
-    if (apiObject.entry.length > 0 && apiObject.entry[0].changes.length > 0 &&
-      apiObject.entry[0].changes[0].value &&
-      apiObject.entry[0].changes[0].value.statuses &&
-      apiObject.entry[0].changes[0].value.statuses.length > 0) {
+  processChanges(changes: IChange[]) {
+    this.changes.next(changes);
+  }
 
-        let text = '';
-        if(apiObject.entry[0].changes[0].value.statuses[0].errors &&
-          apiObject.entry[0].changes[0].value.statuses[0].errors.length > 0)
-          {
-            text = apiObject.entry[0].changes[0].value.statuses[0].errors[0].title;
+  getChangesByMessageId(messageId: any): IChange[] {
+    let changes = this.getChanges().filter(c => c.messageId === messageId);
+    if (changes)
+      return changes;
+    else
+      return [];
+  }
+
+  getChanges(): IChange[] {
+    return this.changes.getValue();
+  }
+
+  getChatChanges(_chatid:any, _lastChangeTimestamp:any): Promise<IChange[]> {    
+
+    return new Promise((resolve, reject) => {
+      let q = this._firebaseService.getOnceCollectionRef
+        ('change')
+        .orderByChild('chatId')
+        .equalTo(_chatid);
+        if(_lastChangeTimestamp)
+        {
+          q = q.orderByChild('timestamp')
+          .startAt(_lastChangeTimestamp)
+        }
+        q.once('value', snapshot => {
+          if (snapshot.val()) {
+            let changes: IChange[] = [];
+            snapshot.forEach(m => {
+              changes.push(this.newChange
+                (m.val().id,
+                  m.val().messageId,
+                  m.val().status,
+                  m.val().timestamp,
+                  m.val().recipientId,
+                  m.val().text,
+                  m.val().chatId));
+            });
+
+            resolve(changes);
           }
-
-        change = this.newChange(apiObject.entry[0].changes[0].value.statuses[0].id,
-          apiObject.entry[0].changes[0].value.statuses[0].status,
-          new Date((+apiObject.entry[0].changes[0].value.statuses[0].timestamp) * 1000),
-          apiObject.entry[0].changes[0].value.statuses[0].recipient_id, text);
-    }
-
-    return change;
-  }
+        });
+    });
+  }  
 }

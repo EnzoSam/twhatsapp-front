@@ -1,6 +1,6 @@
 export const environment = {
     production: true,
-    baseApiUrl: 'https://gray-jittery-mite.cyclic.app/api/',
+    baseApiUrl: 'https://twhatsapp-api.onrender.com/',
     firebase: {
       apiKey: "AIzaSyAD2tdsGGE4bRPSCRvPIiAJdAeFx6uDPbo",
       authDomain: "twhatsapp-a6696.firebaseapp.com",
