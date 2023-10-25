@@ -9,6 +9,8 @@ export interface IChat {
     contact:IContact;
     messages:IMessage[]
     lastChangeId: any;
-    lastChangeTimestamp?:any,
-    lastMessage?:IMessage;
+    noReadsMessages:number | 0;
+    lastChangeTimestamp?:any;
+    lastMessage?:IMessage
+
 }

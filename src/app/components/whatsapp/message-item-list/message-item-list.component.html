@@ -10,7 +10,9 @@
       <small *ngIf="chat.lastMessage && chat.lastMessage.type === 'template'">
         {{chat.lastMessage.content.fileName}}
       </small>      
-      <span class="col badge bg-success rounded-pill col-auto">1</span>
+      <span *ngIf="chat.noReadsMessages !== 0" 
+      class="col badge bg-success rounded-pill col-auto">
+      {{chat.noReadsMessages}}</span>
     </div>  
   </div>
 </div>

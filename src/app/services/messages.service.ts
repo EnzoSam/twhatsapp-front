@@ -100,4 +100,9 @@ export class MessagesService extends BaseServiceService implements OnDestroy {
     return this._http.get(this.apiUrl + "media/download/" + 
     message.content.documentId, { responseType: 'blob' });
   }
+
+  wasReaded(message:IMessage):boolean
+  {
+    return message.changes.find(c=>c.status === 'read') != null;
+  }
 }

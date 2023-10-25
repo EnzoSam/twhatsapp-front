@@ -58,7 +58,7 @@ export class ChatService implements OnDestroy {
       this.changesChanges.unsubscribe();
   }
 
-  loadChats(chats: IChat[]):Promise<IChat[]> {
+  loadChats(chats: IChat[]): Promise<IChat[]> {
     return new Promise((resolve, reject) => {
       let chatsReturn: IChat[] = [];
       for (let c of chats) {
@@ -75,7 +75,6 @@ export class ChatService implements OnDestroy {
             .then(_chatsWithChanges => {
               resolve(_chatsWithChanges);
             });
-
         })
     });
   }
@@ -83,15 +82,6 @@ export class ChatService implements OnDestroy {
   procesChatChanges(chats: any) {
 
     this.loadChats(chats).then(chatsLoads => {
-
-      for(let c of chatsLoads)
-      {
-        c.messages = c.messages.sort((a:IMessage,b:IMessage) =>
-        {
-          {return a.timestamp < b.timestamp ? 1 : -1;}
-        });
-      }
-
       this.chats.next(chatsLoads);
       this.initChangesSubscription();
     })
@@ -102,19 +92,17 @@ export class ChatService implements OnDestroy {
       try {
         for (let c of _chats) {
 
-          if(!c.id)        
+          if (!c.id)
             continue;
-          
+
           this._changeService.getChatChanges(c.id, c.lastChangeTimestamp)
             .then((changes: IChange[]) => {
 
-              for(let change of changes)
-              {
-                 let messageFinded = c.messages.find(m=>m.id === change.messageId);
-                if(!messageFinded)
-                {
-                  c.messages.push(this._messagesService.newMessage(change.messageId,c.id,
-                    'Mensaje desde API', [], change.timestamp,'text'));
+              for (let change of changes) {
+                let messageFinded = c.messages.find(m => m.id === change.messageId);
+                if (!messageFinded) {
+                  c.messages.push(this._messagesService.newMessage(change.messageId, c.id,
+                    'Mensaje desde API', [], change.timestamp, 'text'));
                 }
               }
 
@@ -126,7 +114,7 @@ export class ChatService implements OnDestroy {
               }
             });
 
-            resolve(_chats);
+          resolve(_chats);
         }
       }
       catch (ex) {
@@ -141,10 +129,8 @@ export class ChatService implements OnDestroy {
         for (let c of chat) {
           this._messagesService.getMessagesByChat(c.id)
             .then((m: IMessage[]) => {
-              if (m)
-              {
+              if (m)              
                 c.messages = m;
-              }
               else
                 c.messages = [];
             });
@@ -170,9 +156,6 @@ export class ChatService implements OnDestroy {
   }
 
   setChanges(_chats: IChat[], _chages: IChange[]) {
-
-    let messages = this.extratMessagesIds(_chages);
-
 
     for (let chat of _chats) {
 
@@ -200,6 +183,7 @@ export class ChatService implements OnDestroy {
       contactId: _contact.id,
       contact: _contact,
       messages: [],
+      noReadsMessages: 0,
       lastChangeId: undefined,
       lastMessage: undefined
     }
@@ -213,5 +197,16 @@ export class ChatService implements OnDestroy {
   getChat(contactId: any): IChat | undefined {
     let chat = this.getCurrentChatList().find(c => c.contactId === contactId);
     return chat;
+  }
+
+  getNoReadedMessages(chat: IChat): number {
+    let noReaded = 0;
+
+    for (let m of chat.messages) {
+      if (!this._messagesService.wasReaded(m))
+        noReaded++;
+    }
+
+    return noReaded;
   }
 }
