@@ -5,6 +5,7 @@ import { FirebaseService } from './firebase.service';
 import { Observable } from 'rxjs';
 import { IMessage } from '../models/imessage.interface';
 import { IChange } from '../models/ichange.interface';
+import { messageStatus } from '../constants/status.constats';
 
 @Injectable({
   providedIn: 'root'
@@ -87,7 +88,9 @@ export class MessagesService extends BaseServiceService implements OnDestroy {
       _message.changes = [];
 
       if(!_message.changes.find(c=>c.id === _change.id))
+      {
         _message.changes.push(_change);
+      }
   }
 
   downloadMessageContent(message:IMessage):Observable<any>
@@ -98,6 +101,6 @@ export class MessagesService extends BaseServiceService implements OnDestroy {
 
   wasReaded(message:IMessage):boolean
   {
-    return message.changes.find(c=>c.status === 'read') != null;
+    return message.changes.find(c=>c.status === messageStatus.readed) != null;
   }
 }

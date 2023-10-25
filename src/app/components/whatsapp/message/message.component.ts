@@ -1,4 +1,5 @@
 import { Component, Input } from '@angular/core';
+import { messageStatus } from 'src/app/constants/status.constats';
 import { IChange } from 'src/app/models/ichange.interface';
 import { IMessage } from 'src/app/models/imessage.interface';
 import { MessagesService } from 'src/app/services/messages.service';
@@ -37,14 +38,14 @@ export class MessageComponent {
     if(!this.message || !this.message?.changes)
       return '';
 
-    if(this.message?.changes.find((c: IChange)=>c.status === 'read'))
-      return 'read';
-    else if(this.message?.changes.find((c: IChange)=>c.status === 'delivered'))
-      return 'delivered';
-    else if(this.message?.changes.find((c: IChange)=>c.status === 'sent'))
-      return 'sent';    
-    else if(this.message?.changes.find((c: IChange)=>c.status === 'failed'))
-      return 'failed';    
+    if(this.message?.changes.find((c: IChange)=>c.status === messageStatus.readed))
+      return  messageStatus.readed;
+    else if(this.message?.changes.find((c: IChange)=>c.status ===messageStatus.delivered))
+      return messageStatus.delivered;
+    else if(this.message?.changes.find((c: IChange)=>c.status === messageStatus.sended))
+      return messageStatus.sended;    
+    else if(this.message?.changes.find((c: IChange)=>c.status === messageStatus.failed))
+      return messageStatus.failed;    
     else
          return '';
   }

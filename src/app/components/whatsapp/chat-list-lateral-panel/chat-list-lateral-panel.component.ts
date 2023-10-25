@@ -4,15 +4,13 @@ import { routesPaths } from 'src/app/constants/routes.contants';
 import { IChat } from 'src/app/models/ichat.interface';
 import { IContact } from 'src/app/models/icontact.interface';
 import { ChatService } from 'src/app/services/chat.service';
-import { FirebaseService } from 'src/app/services/firebase.service';
-import { MessagesService } from 'src/app/services/messages.service';
 
 @Component({
-  selector: 'app-message-list-lateral-panel',
-  templateUrl: './message-list-lateral-panel.component.html',
-  styleUrls: ['./message-list-lateral-panel.component.css']
+  selector: 'app-chat-list-lateral-panel',
+  templateUrl: './chat-list-lateral-panel.component.html',
+  styleUrls: ['./chat-list-lateral-panel.component.css']
 })
-export class MessageListLateralPanelComponent implements OnInit, OnDestroy{
+export class ChatListLateralPanelComponent implements OnInit, OnDestroy{
 
   chats:IChat[];
   chatSubscription?: Subscription;

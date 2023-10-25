@@ -16,7 +16,7 @@
         </div>  
         <div class="row text-end">
             <small class="text-body-secondary m-0">
-                {{(+message.timestamp) | date:'dd/MM/yyyy HH:mm:ss'}}
+                {{(+message.timestamp * 1000) | date:'dd/MM/yyyy HH:mm:ss'}}
                 <i data-bs-toggle="modal" [attr.data-bs-target]="'#logModal' + getIdentifier()" *ngIf="lastStatus() === 'delivered'" class="fa-solid fa-check-double"></i>
                 <i data-bs-toggle="modal" [attr.data-bs-target]="'#logModal' + getIdentifier()" *ngIf="lastStatus() === 'read'" class="fa-solid fa-check-double" style="color: #0ff5f5;"></i>
                 <i data-bs-toggle="modal" [attr.data-bs-target]="'#logModal' + getIdentifier()" *ngIf="lastStatus() === 'sent'" class="fa-solid fa-check"></i>

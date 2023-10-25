@@ -73,6 +73,13 @@ export class ChatService implements OnDestroy {
         .then(chatsLoads => {
           this.loadChanges(chatsLoads)
             .then(_chatsWithChanges => {
+
+              for (let c of _chatsWithChanges) {
+                c.messages.sort((a, b) => {
+                  return a.timestamp - b.timestamp;
+                })
+              }
+
               resolve(_chatsWithChanges);
             });
         })
@@ -109,12 +116,18 @@ export class ChatService implements OnDestroy {
               for (let message of c.messages) {
                 let messageChanges = changes.filter
                   (c => c.messageId === message.id);
-                messageChanges.forEach(mc =>
-                  this._messagesService.addChange(message, mc));
+                messageChanges.forEach(mc => {
+                  if (c.lastChangeId && c.lastChangeId === mc.id) {
+                    c.lastMessage = message;
+                  }
+                  this._messagesService.addChange(message, mc);
+                });
               }
-            });
 
-          resolve(_chats);
+              resolve(_chats);
+            }).catch(err => {
+              reject(err);
+            });
         }
       }
       catch (ex) {
@@ -129,10 +142,14 @@ export class ChatService implements OnDestroy {
         for (let c of chat) {
           this._messagesService.getMessagesByChat(c.id)
             .then((m: IMessage[]) => {
-              if (m)              
+              if (m)
+              {
                 c.messages = m;
+              }
               else
+              {
                 c.messages = [];
+              }
             });
         }
         resolve(chat);
@@ -153,27 +170,6 @@ export class ChatService implements OnDestroy {
     let messagesIds: any[] =
       [...new Set(_chages.map(c => c.chatId))];
     return messagesIds;
-  }
-
-  setChanges(_chats: IChat[], _chages: IChange[]) {
-
-    for (let chat of _chats) {
-
-      if (chat.lastChangeId) {
-        let last = _chages.find(c => c.id === chat.lastChangeId);
-        if (last) {
-          chat.lastMessage = chat.messages.find(m => m.id === last?.messageId);
-          if (!chat.lastMessage)
-            this.loadMessages([chat]).then(chatLoaded => {
-              chat.lastMessage = chat.messages.find(m => m.id === last?.messageId);
-            })
-        }
-      }
-
-      for (let message of chat.messages) {
-        message.changes = _chages.filter(c => c.messageId == message.id);
-      }
-    }
   }
 
   newChat(_contact: IContact): IChat {

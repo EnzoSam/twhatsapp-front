@@ -7,8 +7,8 @@ import { environment } from './envirorments/envirorments'
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
-import { MessageListLateralPanelComponent } from './components/whatsapp/message-list-lateral-panel/message-list-lateral-panel.component';
-import { MessageItemListComponent } from './components/whatsapp/message-item-list/message-item-list.component';
+import { ChatListLateralPanelComponent } from './components/whatsapp/chat-list-lateral-panel/chat-list-lateral-panel.component';
+import { MessageItemListComponent } from './components/whatsapp/chat-item-list/chat-item-list.component';
 import { ChatContainerComponent } from './components/whatsapp/chat-container/chat-container.component';
 import { FirebaseService } from './services/firebase.service';
 import { MessagesService } from './services/messages.service';
@@ -29,7 +29,7 @@ initializeApp(environment.firebaseConfigHosting);
 @NgModule({
   declarations: [
     AppComponent,
-    MessageListLateralPanelComponent,
+    ChatListLateralPanelComponent,
     MessageItemListComponent,
     ChatContainerComponent,
     ErrorDefaultComponent,

@@ -5,9 +5,9 @@ import { IChat } from 'src/app/models/ichat.interface';
 import { ChatService } from 'src/app/services/chat.service';
 
 @Component({
-  selector: 'app-message-item-list',
-  templateUrl: './message-item-list.component.html',
-  styleUrls: ['./message-item-list.component.css']
+  selector: 'app-chat-item-list',
+  templateUrl: './chat-item-list.component.html',
+  styleUrls: ['./chat-item-list.component.css']
 })
 export class MessageItemListComponent {
 
