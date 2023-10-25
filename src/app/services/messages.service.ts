@@ -1,15 +1,10 @@
 import { Injectable, OnDestroy } from '@angular/core';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
 import { BaseServiceService } from './base-service.service';
 import { FirebaseService } from './firebase.service';
-import { Observable, Subscription } from 'rxjs';
-import { IContact } from '../models/icontact.interface';
+import { Observable } from 'rxjs';
 import { IMessage } from '../models/imessage.interface';
-import { ContactService } from './contact.service';
 import { IChange } from '../models/ichange.interface';
-import { ChangeService } from './change.service';
-import { ChatService } from './chat.service';
-import { IChat } from '../models/ichat.interface';
 
 @Injectable({
   providedIn: 'root'
@@ -65,7 +60,7 @@ export class MessagesService extends BaseServiceService implements OnDestroy {
         return;
       }
       this._firebaseService.getOnceCollectionRef
-        ('message1')
+        ('message')
         .orderByChild('chatId')
         .equalTo(chatId)
         .once('value', snapshot => {
