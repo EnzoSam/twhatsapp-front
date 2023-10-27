@@ -1,9 +1,14 @@
 <div class="chat-container col border-start" *ngIf="chat">
-    <div class="row mb-3 mt-2">       
-       <h4>
-        <i class="col-auto fa-solid fa-user m-2"></i>
-        {{chat.contact.name}}
-        </h4>
+    <div class="contact-info row mb-3 mt-0">   
+        <div class="col-auto mt-3">
+            <i class="fa-solid fa-user fa-2xl m-2"></i>
+        </div>            
+        <div class="col mt-2">
+            <h6 class="mb-0">        
+                {{chat.contact.name}}
+            </h6>            
+                <small>{{chat.contact.id}}</small>            
+        </div>
     </div>
     <div class="row ms-3">
         <app-message class="row" [message]="m" *ngFor="let m of chat.messages">        

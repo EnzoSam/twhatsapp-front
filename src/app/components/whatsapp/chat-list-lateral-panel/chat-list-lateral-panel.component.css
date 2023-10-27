@@ -3,3 +3,21 @@
     position:fixed;
     top:0;
 }
+
+.panel-container
+{
+    background-color: #111B21;
+}
+
+li{
+    background-color: transparent;
+}
+
+.app-title
+{
+    background-color: #202C33
+}
+
+ul>.active {
+    background-color:#2A3942;
+}
