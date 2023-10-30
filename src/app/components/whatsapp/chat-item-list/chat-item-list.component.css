@@ -3,3 +3,14 @@
     min-height: 60px;
     cursor: pointer;        
 }
+
+.chat-avatar
+{
+    background: #6a7175;
+    border-radius: 100%;
+}
+
+.chat-avatar-icon
+{
+    margin-top: 22px;
+}

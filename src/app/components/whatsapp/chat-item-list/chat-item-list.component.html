@@ -1,19 +1,24 @@
-<div *ngIf="chat" (click)="scrollToBottom()">
+<div class="ps-2" *ngIf="chat" (click)="scrollToBottom()">
 <div class="message-item-list" *ngIf="chat"  [routerLink]="[routes.chat, chat.contactId]">
   <div class="row">
-    <i class="col-auto fa-solid fa-user"></i>
-    <div class="col" [routerLink]="[routes.chat, chat.contactId]">{{chat.contact.name}}</div>
-    <div *ngIf="chat">
-      <small *ngIf="chat.lastMessage && chat.lastMessage.type === 'text'">
-        {{chat.lastMessage.content}}
-      </small>
-      <small *ngIf="chat.lastMessage && chat.lastMessage.type === 'template'">
-        {{chat.lastMessage.content.fileName}}
-      </small>      
-      <span *ngIf="chat.noReadsMessages !== 0" 
-      class="col badge bg-success rounded-pill col-auto">
-      {{chat.noReadsMessages}}</span>
-    </div>  
+    <div class="col-auto chat-avatar">
+      <i class="fa-solid fa-user fa-xl chat-avatar-icon"></i>
+    </div>
+    <div class="col">
+      <div class="col" [routerLink]="[routes.chat, chat.contactId]">{{chat.contact.name}}</div>
+      <div *ngIf="chat">
+        <small *ngIf="chat.lastMessage && chat.lastMessage.type === 'text'">
+          {{chat.lastMessage.content}}
+        </small>
+        <small *ngIf="chat.lastMessage && chat.lastMessage.type === 'template'">
+          {{chat.lastMessage.content.fileName}}
+        </small>      
+        <span *ngIf="chat.noReadsMessages !== 0" 
+        class="col badge bg-success rounded-pill col-auto">
+        {{chat.noReadsMessages}}</span>
+      </div>  
+    </div>
+
   </div>
 </div>
 </div>
