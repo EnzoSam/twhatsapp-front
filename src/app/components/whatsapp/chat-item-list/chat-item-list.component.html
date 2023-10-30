@@ -1,21 +1,31 @@
-<div class="ps-2" *ngIf="chat" (click)="scrollToBottom()">
+<div class="ps-1" *ngIf="chat" (click)="scrollToBottom()">
 <div class="message-item-list" *ngIf="chat"  [routerLink]="[routes.chat, chat.contactId]">
   <div class="row">
     <div class="col-auto chat-avatar">
       <i class="fa-solid fa-user fa-xl chat-avatar-icon"></i>
     </div>
-    <div class="col">
+    <div class="col last-message-info">
       <div class="col" [routerLink]="[routes.chat, chat.contactId]">{{chat.contact.name}}</div>
-      <div *ngIf="chat">
-        <small *ngIf="chat.lastMessage && chat.lastMessage.type === 'text'">
-          {{chat.lastMessage.content}}
-        </small>
-        <small *ngIf="chat.lastMessage && chat.lastMessage.type === 'template'">
-          {{chat.lastMessage.content.fileName}}
-        </small>      
-        <span *ngIf="chat.noReadsMessages !== 0" 
-        class="col badge bg-success rounded-pill col-auto">
-        {{chat.noReadsMessages}}</span>
+      <div *ngIf="chat" class="mb-2">
+        <div class="row">
+          <div *ngIf="chat.lastMessage" class="col-auto pe-0 me-2">
+            <i   *ngIf="lastStatus() === 'delivered'" class="fa-solid fa-check-double"></i>
+            <i  *ngIf="lastStatus() === 'read'" class="fa-solid fa-check-double" style="color: #53BDEB;"></i>
+            <i *ngIf="lastStatus() === 'sent'" class="fa-solid fa-check"></i>
+            <i  *ngIf="lastStatus() === 'failed'" class="fa-solid fa-triangle-exclamation" style="color: #dc3545;"></i>
+          </div>
+          <div class="col ps-0">
+            <small *ngIf="chat.lastMessage && chat.lastMessage.type === 'text'">
+              {{chat.lastMessage.content}}
+            </small>
+            <small *ngIf="chat.lastMessage && chat.lastMessage.type === 'template'">
+              {{chat.lastMessage.content.fileName}}
+            </small>      
+            <span *ngIf="chat.noReadsMessages !== 0" 
+            class="col badge bg-success rounded-pill col-auto">
+            {{chat.noReadsMessages}}</span>
+          </div>
+        </div>
       </div>  
     </div>
 
