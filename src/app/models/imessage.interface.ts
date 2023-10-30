@@ -7,4 +7,5 @@ export interface IMessage {
     changes:IChange[];
     timestamp:any;
     type:any;
+    itsMy:boolean;
 }

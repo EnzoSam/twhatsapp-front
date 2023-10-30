@@ -1,6 +1,7 @@
 <div *ngIf="message" id="messageContainer"
- class="card border-0 mb-2 col-auto">
-    <div lass="card-body m-4">
+class="card border-0 mb-2 col-auto" 
+ [ngClass]="{memessage:message.itsMy, recipientmessage:!message.itsMy}">
+    <div>
         <div class="row card-text m-1">
             <ng-container *ngIf="message.type === 'template'">
               <app-message-content-template [message]="message">

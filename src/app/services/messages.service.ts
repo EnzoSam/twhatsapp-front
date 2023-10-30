@@ -30,7 +30,7 @@ export class MessagesService extends BaseServiceService implements OnDestroy {
   }
 
   newMessage(_id: any, _chatId: any, _content: any,
-    _changes: IChange[], _timestamp: any, _type: any): IMessage {
+    _changes: IChange[], _timestamp: any, _type: any, _itsMy:boolean): IMessage {
 
     return {
       id: _id,
@@ -38,7 +38,8 @@ export class MessagesService extends BaseServiceService implements OnDestroy {
       content: _content,
       changes: _changes,
       timestamp: _timestamp,
-      type: _type
+      type: _type,
+      itsMy:_itsMy
     };
   }
 
@@ -74,7 +75,8 @@ export class MessagesService extends BaseServiceService implements OnDestroy {
                   m.val().content,
                   [],
                   m.val().timestamp,
-                  m.val().type));
+                  m.val().type,
+                  false));
             });
             resolve(messages);
           }

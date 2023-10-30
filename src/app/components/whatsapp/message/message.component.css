@@ -1,9 +1,21 @@
+.memessage
+{
+    background-color: #005C4B;     
+    margin-left: auto;
+}
+
+.recipientmessage
+{
+    background-color:#202C33;
+    
+}
+
 #messageContainer
 {
     min-width: 170px;
-    background-color: #005C4B;
 }
 
 i{
     cursor: pointer;    
 }
+

@@ -108,8 +108,9 @@ export class ChatService implements OnDestroy {
               for (let change of changes) {
                 let messageFinded = c.messages.find(m => m.id === change.messageId);
                 if (!messageFinded) {
-                  c.messages.push(this._messagesService.newMessage(change.messageId, c.id,
-                    'Mensaje desde API', [], change.timestamp, 'text'));
+                  c.messages.push(this._messagesService.newMessage
+                    (change.messageId, c.id, 'Mensaje desde API', [], 
+                    change.timestamp, 'text', true));
                 }
               }
 

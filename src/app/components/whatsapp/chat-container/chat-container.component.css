@@ -10,3 +10,20 @@
    background-color: #202C33;
    height: 56px;
 }
+
+.message-container{
+  margin-left: 50px;
+  margin-right: 50px;
+}
+
+@media (max-width: 575.98px) {
+  .message-container{
+    margin-left: 30px;
+    margin-right: 0px;
+  }
+  
+  .contact-info
+  {
+    margin-left: 10px;
+  }
+}
