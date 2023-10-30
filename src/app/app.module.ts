@@ -23,6 +23,7 @@ import { ChangeService } from './services/change.service';
 import { initializeApp } from "firebase/app";
 import { MessageContentTextComponent } from './components/whatsapp/message-content-text/message-content-text.component';
 import { MessageContentTemplateComponent } from './components/whatsapp/message-content-template/message-content-template.component';
+import { SenderComponent } from './components/whatsapp/sender/sender.component';
 
 initializeApp(environment.firebaseConfigHosting);
 
@@ -36,7 +37,8 @@ initializeApp(environment.firebaseConfigHosting);
     MessageComponent,
     HomeComponent,
     MessageContentTextComponent,
-    MessageContentTemplateComponent
+    MessageContentTemplateComponent,
+    SenderComponent
   ],
   imports: [
     BrowserModule,
