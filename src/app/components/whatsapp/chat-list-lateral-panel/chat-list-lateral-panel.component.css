@@ -1,12 +1,6 @@
-.list-messages-header
-{
-    position:fixed;
-    top:0;
-}
-
 .panel-container
 {
-    background-color: #111B21;
+    background-color: #111B21;    
 }
 
 li{
@@ -20,4 +14,9 @@ li{
 
 ul>.active {
     background-color:#2A3942;
+}
+
+.search-container
+{
+    background-color: #111B21;
 }

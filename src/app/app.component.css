@@ -1,12 +1,33 @@
-app-chat-list-lateral-panel
-{
+app-chat-list-lateral-panel {
     background-color: #111B21;
 }
 
 @media (max-width: 575.98px) {
-    #aaa1
-    {
+    #aaa1 {
         overflow-x: auto;
     }
 
- }
+}
+
+.sidebar {
+    height: 100vh;
+    overflow-y: auto;
+    padding: 0;
+    margin: 0;
+}
+
+#router-outlet {
+    height: 100vh;
+    max-height: 100vh;
+    min-height: 100vh;
+    overflow-y: auto;
+    overflow-x: hidden;
+    padding: 0;
+    margin: 0;
+}
+
+app-chat-list-lateral-panel
+{
+    padding: 0;
+    max-width: 0;
+}

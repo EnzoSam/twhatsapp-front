@@ -1,12 +1,39 @@
-<div id="aaa1" class="m-0 p-0">
-  <div class="row m-0 vh-100 d-flex m-0 p-0">
-    <div id = "pc" class="d-flex flex-nowrap m-0 p-0">
-      <app-chat-list-lateral-panel class="col-md-3 col-sm-12 col-xs-12 col-12">        
-      </app-chat-list-lateral-panel>
-      <div class="col-12 col-xs-12 col-md-9">
-        <router-outlet></router-outlet>
-      </div>
-    </div>
-  
+<div *ngIf="!ready" class="vh-100 d-flex justify-content-center align-items-center">
+  <div class="spinner-grow text-primary" role="status">
+    <span class="visually-hidden">Loading...</span>
+  </div>
+  <div class="spinner-grow text-secondary" role="status">
+    <span class="visually-hidden">Loading...</span>
+  </div>
+  <div class="spinner-grow text-success" role="status">
+    <span class="visually-hidden">Loading...</span>
+  </div>
+  <div class="spinner-grow text-danger" role="status">
+    <span class="visually-hidden">Loading...</span>
+  </div>
+  <div class="spinner-grow text-warning" role="status">
+    <span class="visually-hidden">Loading...</span>
+  </div>
+  <div class="spinner-grow text-info" role="status">
+    <span class="visually-hidden">Loading...</span>
+  </div>
+  <div class="spinner-grow text-light" role="status">
+    <span class="visually-hidden">Loading...</span>
+  </div>
+  <div class="spinner-grow text-dark" role="status">
+    <span class="visually-hidden">Loading...</span>
+  </div>
+</div>
+
+<div *ngIf="ready" id="aaa1" class="container-fluid m-0 p-0">
+  <div class="d-flex flex-nowrap m-0 p-0">
+      <nav class="col-md-3 col-sm-12 col-xs-12 col-12 d-md-block bg-dark sidebar">
+          <div class="position-sticky">
+            <app-chat-list-lateral-panel></app-chat-list-lateral-panel>
+          </div>
+      </nav>
+      <main id="router-outlet" class="col-md-9 col-12 col-xs-12">
+          <router-outlet></router-outlet>
+      </main>
   </div>
 </div>

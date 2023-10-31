@@ -8,6 +8,7 @@ import { IMessage } from '../models/imessage.interface';
 import { ChangeService } from './change.service';
 import { IChange } from '../models/ichange.interface';
 import { FirebaseService } from './firebase.service';
+import { UiService } from './ui.service';
 
 @Injectable({
   providedIn: 'root'
@@ -23,7 +24,8 @@ export class ChatService implements OnDestroy {
   constructor(private _firebaseService: FirebaseService,
     private _contactService: ContactService,
     private _changeService: ChangeService,
-    private _messagesService: MessagesService) {
+    private _messagesService: MessagesService,
+    private _uiService:UiService) {
 
     this.chats.next([]);
 
@@ -59,6 +61,7 @@ export class ChatService implements OnDestroy {
   }
 
   loadChats(chats: IChat[]): Promise<IChat[]> {
+    
     return new Promise((resolve, reject) => {
       let chatsReturn: IChat[] = [];
       for (let c of chats) {
@@ -80,6 +83,8 @@ export class ChatService implements OnDestroy {
                 })
               }
 
+              if(this._uiService.isFistLoad())
+                this._uiService.markAsLoaded();
               resolve(_chatsWithChanges);
             });
         })

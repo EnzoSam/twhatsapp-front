@@ -24,6 +24,7 @@ import { initializeApp } from "firebase/app";
 import { MessageContentTextComponent } from './components/whatsapp/message-content-text/message-content-text.component';
 import { MessageContentTemplateComponent } from './components/whatsapp/message-content-template/message-content-template.component';
 import { SenderComponent } from './components/whatsapp/sender/sender.component';
+import { UiService } from './services/ui.service';
 
 initializeApp(environment.firebaseConfigHosting);
 
@@ -48,6 +49,7 @@ initializeApp(environment.firebaseConfigHosting);
     AngularFireDatabaseModule,
   ],
   providers: [FirebaseService,     
+    UiService,
     ContactService,
     ChatService,  
     MessagesService,

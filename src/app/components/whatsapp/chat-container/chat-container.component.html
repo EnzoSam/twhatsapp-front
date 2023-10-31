@@ -1,18 +1,23 @@
-<div class="chat-container col border-start" *ngIf="chat">
-    <div class="contact-info row mb-3 mt-0">   
-        <div class="col-auto mt-3">
-            <i class="fa-solid fa-user fa-2xl m-2"></i>
-        </div>            
-        <div class="col mt-2">
-            <h6 class="mb-0">        
-                {{chat.contact.name}}
-            </h6>            
-                <small>{{chat.contact.id}}</small>            
-        </div>
+<div class="chat-container">
+  <div class="contact-info sticky-top p-0 m-0">
+    <div class="row ps-3 pt-2">
+      <div class="col-auto">
+        <i class="fa-solid fa-user fa-2xl pt-3"></i>
+      </div>
+      <div class="col">
+        <h6 class="mb-0">
+          {{ chat?.contact?.name }}
+        </h6>
+        <small>{{ chat?.contact?.id }}</small>
+      </div>
     </div>
-    <div class="row message-container">
-        <app-message class="row" [message]="m" *ngFor="let m of chat.messages">        
-        </app-message>
-    </div>
+  </div>
 
+  <div class="message-container">
+    <app-message class="row" [message]="m" *ngFor="let m of chat?.messages">
+    </app-message>
+  </div>
+  <div class="sticky-bottom">
+    <app-sender></app-sender>
+  </div>
 </div>

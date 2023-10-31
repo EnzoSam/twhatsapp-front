@@ -1,9 +1,8 @@
 .chat-container
 {
-  height: 100%;
-  background-image: url('../../../../assets/images/whatsapbaclgroundoriginals.jpg');
+  padding: 0;
+  margin: 0;
 }
-
 
 .contact-info
 {
@@ -12,13 +11,17 @@
 }
 
 .message-container{
-  margin-left: 50px;
-  margin-right: 50px;
+  padding-left: 50px;
+  padding-right: 50px;
+  background-image: url('../../../../assets/images/whatsapbaclgroundoriginals.jpg');
+  background-size: cover;
+  background-attachment: fixed;
+  min-height: 100vh;
 }
 
 @media (max-width: 575.98px) {
   .message-container{
-    margin-left: 30px;
+    margin-left: 00px;
     margin-right: 0px;
   }
   
